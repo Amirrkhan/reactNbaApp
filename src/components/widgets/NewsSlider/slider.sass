@@ -1,0 +1,56 @@
+.slider
+    position: relative
+    overflow: hidden
+    height: 500px
+    box-sizing: border-box
+    &__wrapper
+        display: flex
+        position: absolute
+        overflow: hidden
+        height: 100%
+        transition: all 1s ease
+    &__item
+        height: 100%
+        display: flex
+        flex-flow: column
+        background-size: cover
+        justify-content: flex-end
+        color: #fff
+        overflow: hidden
+        padding: 0 100px
+        box-sizing: border-box
+        position: relative
+        &::after
+            content: ''
+            position: absolute
+            top: 0
+            bottom: 0
+            left: 0
+            right: 0
+            background: #000
+            opacity: .6
+        > div
+            z-index: 1
+    &__title
+        font-size: 36px
+        margin-bottom: 50px
+    a
+        color: #fff
+        z-index: 1
+        
+        
+        
+        
+    &__button
+        position: absolute
+        background-color: lighten(blue, 25%)
+        color: #fff
+        border: 1px solid #ececec
+        box-shadow: none
+        top: 48%
+        padding: 2px 10px
+        &--prev
+            left: 0
+        &--next
+            right: 0
+

@@ -1,0 +1,25 @@
+.transition
+    display: flex
+    width: 100%
+    flex-flow: column
+    &__element
+        display: flex
+        width: 100%
+        flex-flow: column
+        align-items: center
+        border: 1px solid lighten(gray, 25%)
+        background-color: lighten(gray, 30%)
+        padding: 5px
+        color: #fff
+        box-sizing: border-box
+    &__hidden
+        visibility: hidden
+        transform: translateX(-100vw)
+        opacity: 0
+        height: 0px 
+        transition: all 1s ease
+    &__display
+        visibility: visible
+        transform: translateX(0)
+        opacity: 1
+        transition: all 1s ease
