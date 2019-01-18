@@ -44,11 +44,16 @@ function cardTemplate(type, itemId, i,  itemTitle, itemTeam, style, itemImage=''
         return(
             <div className="news__item news__item--image" style={style} key={i} id={`news-item${i}`}>
 
-                <div className="news__image"
-                     style={{backgroundImage:`url(/images/articles/${itemImage})`}}
-                >
-
-                </div>
+                
+                {itemImage.length > 7 ? 
+                    <div className="news__image"
+                    style={{backgroundImage:`url(gs://nba-full-1faf0.appspot.com/images/${itemImage})`}}
+                    />
+                :
+                    <div className="news__image"
+                        style={{backgroundImage:`url(/images/articles/${itemImage})`}}
+                    />
+                }
 
                 <div className="news__info">
                     <Link to={`/article/${itemId}`}>

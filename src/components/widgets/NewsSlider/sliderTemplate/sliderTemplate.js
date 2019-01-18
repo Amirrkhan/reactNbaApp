@@ -6,30 +6,40 @@ class SliderTemplate extends Component {
 
     state = {
         moveWidth: 0,
-        sliderMaxWidth: ((this.props.items-1) * this.props.slideWidth)
+        sliderMaxWidth: ((this.props.items-1) * this.props.slideWidth),
+        news: [],
+        
     }
 
+    
+    
     slideCreate = () => {
+        
         const listOfSlides = this.props.news.map((item, i) =>{
+            
             return(
+                <Link to={`article/${item.id}`}>
                 <div className="slider__item slider" id={`slide-${i}`} key={item.id}
+                    
                     style={{
-                        backgroundImage:`url(/images/articles/${item.image})`,
+                        backgroundImage:`url(${item.image})`,
                         width: `${this.props.slideWidth}px`,
                         position: 'relative',
                     }}
                 >
-                    <Link to={`articles/${item.id}`}>
+                    
                         <div className="slider__title">{item.title}</div>
-                    </Link>
+                    
                     
                 </div>
+                </Link>
             )
         })
         return listOfSlides
     }
 
     componentDidUpdate(){
+        
         const slideWrapper = document.querySelector(".slider__wrapper")
         slideWrapper.style.transform = `translateX(${this.state.moveWidth}px)`
         
@@ -63,7 +73,7 @@ class SliderTemplate extends Component {
         
     }
 
-    render() {
+    render() {  
         return (
             <div className="slider">
             <div className ="slider__wrapper" style={{width:`${this.props.slideWidth}`}}>

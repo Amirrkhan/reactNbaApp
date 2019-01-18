@@ -1,8 +1,6 @@
 import React, {Component} from 'react'
 
-import axios from 'axios'
-
-import {URL} from '../../../../config'
+import {firebaseVideos, firebaseTeams, firebaseLooper, firebaseDB} from '../../../../firebase'
 import Header from './header'
 import '../../articles.sass'
 
@@ -19,51 +17,47 @@ class VideosArticle extends Component{
     }
 
     componentWillMount(){
-        axios.get(`${URL}videos?id=${this.props.match.params.id}`)
-        .then(response => {
-            let article = response.data[0]
+        firebaseDB.ref(`videos/${this.props.match.params.id}`).once('value')
+        .then((snapshot) => {
+            let article = snapshot.val();
+            console.log(`team : ${article.team}`)
+            firebaseTeams.orderByChild("id").equalTo(article.team+1).once('value')
+            .then((snapshot) =>{
+                const team = firebaseLooper(snapshot)
 
-            axios.get(`${URL}teams?id=${article.team}`)
-            .then(response => {
-                console.log()
                 this.setState({
                     article,
-                    team: response.data
+                    team
                 })
-                
-                    this.getRelated();
-                })
-                
+                this.getRelated()
             })
+        })
     }
 
     getRelated = () => {
-        
-        axios.get(`${URL}teams`)
-        .then( response => {
-            let teams = response.data
+
+        firebaseTeams.once('value')
+        .then((snapshot)=>{
+            let teams = firebaseLooper(snapshot)
             
-            axios.get(`${URL}videos?q=${this.state.team[0].city}&_limit=3`)
-            .then(response => {
-                
+            firebaseVideos.orderByChild("team").equalTo(this.state.article.team)
+            .limitToFirst(3)
+            .once('value')
+            .then((snapshot) => {
+                const related = firebaseLooper(snapshot)
                 this.setState({
-                    teams,
-                    related: response.data
+                    related,
+                    teams
                 })
             })
         })
 
     }
 
-    loadmore = () => {
-
-    }
-
     render(){
         const article = this.state.article
         const team = this.state.team
-        console.log(this.state.related)
-
+        console.log(this.state.article.url)
         return(
             <div className="article article--videos">
                 <Header teamData = {team} 

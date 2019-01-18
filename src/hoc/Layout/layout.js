@@ -28,6 +28,7 @@ class Layout extends Component {
     }
 
     render() {
+        
         return (
             <div>
                 <Header
@@ -35,6 +36,7 @@ class Layout extends Component {
                     onHideNav = {() => this.togglesideNav(false)}
                     onOpenNav = {() => this.togglesideNav(true)}
                     logo = {this.logo()}
+                    user = {this.props.user}
                 />
                 {this.props.children}
                 <Footer logo = {this.logo()}/>

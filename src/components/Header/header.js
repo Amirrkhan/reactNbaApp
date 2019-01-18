@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import SideNav from './SideNav/sideNav'
 
@@ -6,36 +6,29 @@ import './header.sass'
 
 import FontAwesome from 'react-fontawesome'
 
-class Header extends Component {
+const Header = (props) =>{
 
 
-    state = {
-
-    }
-
-    navBars = () => (
+    const navBars = () => (
         <div className="bars">
             <FontAwesome 
             name='bars'
-            onClick={this.props.onOpenNav}
+            onClick={props.onOpenNav}
             />
         </div>
     )
         
+    return (
+        <header className="header">
+            <SideNav {...props}/>
+            <div className="header__item">
+                {navBars()}
+                {props.logo}
+
+            </div>
+        </header>
+    );
     
-
-    render() {
-        return (
-            <header className="header">
-                <SideNav {...this.props}/>
-
-                <div className="header__item">
-                    {this.navBars()}
-                    {this.props.logo}
-                </div>
-            </header>
-        );
-    }
 }
 
 export default Header;

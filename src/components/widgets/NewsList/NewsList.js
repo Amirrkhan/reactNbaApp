@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 
 import Button from '../../button/button'
 
-import axios from 'axios'
-import {URL} from '../../../config'
 import NewsTemplate from './newsTemplate/newsTemplate'
-
+import {firebaseArticles, firebaseTeams, firebaseLooper} from '../../../firebase'
 import './newsList.sass'
 
 
@@ -18,33 +16,39 @@ class NewsList extends Component {
         style: {transform: 'translateX(0)'}
     }
 
-    getData = (url, baseFromName, start, end) => {
+    getData = (database, start, amount) => {
 
         if (this.state.teams.length < 1){
-            axios.get(`${url}teams`).then(response => {
+            firebaseTeams.once('value')
+            .then((snapshot)=>{
+                const teams = firebaseLooper(snapshot)
                 this.setState({
-                    teams: response.data
+                    teams
                 })
             })
         }
 
-        axios.get(`${url}${baseFromName}?_start=${start}&_end=${end}`).then(response => {
+        database.orderByChild('id').startAt(start).limitToFirst(amount).once('value')
+        .then((snapshot) => {
+            const news = firebaseLooper(snapshot)
             this.setState({
-                news: [...this.state.news,...response.data]
+                news
             })
         })
     }
 
-    componentWillMount() {
+    componentDidMount() {
         
-        this.getData(URL, this.props.nameBaseFrom, this.props.start, this.state.end)
+        this.getData(firebaseArticles, this.props.start, this.state.end)
         
     }
 
     loadMoreNews = () => {
-        let start = this.state.end 
-        let end = this.state.end + this.props.amount
-        this.getData(URL, this.props.nameBaseFrom, start, end )
+        let end = this.state.end + (this.props.amount-1)
+        let start = this.state.end
+
+        this.getData(firebaseArticles, start, end)
+
         this.setState({
             end: this.state.end + this.props.amount
         })
@@ -52,6 +56,7 @@ class NewsList extends Component {
 
 
     render() {
+        
         return (
             <div className='news'>
                 <NewsTemplate

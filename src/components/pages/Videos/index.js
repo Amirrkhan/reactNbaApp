@@ -12,7 +12,7 @@ class VideosMainPage extends Component {
                     loadmore = {true}
                     start = {0}
                     amount = {3}
-                    nameBaseFrom={`videos`}
+                    
                 />
             </div>
         );

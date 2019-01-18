@@ -10,8 +10,7 @@ class Home extends Component {
             <div>
                 <NewsSlider
                     start={0}
-                    amount={6}
-                    nameBaseFrom={`articles`}
+                    amount={3}
                     setting={
                         []
                     }
@@ -19,8 +18,8 @@ class Home extends Component {
 
                 <NewsList
                     type='card'
-                    start={0}
-                    amount={2}
+                    start={1}
+                    amount={3}
                     nameBaseFrom={`articles`}
                     loadmore = {true}
                     loadmoreText = 'Load more news'
@@ -31,7 +30,7 @@ class Home extends Component {
                     title={ true}
                     titleText = 'NBA videos'
                     loadmore = {true}
-                    start = {0}
+                    start = {1}
                     amount = {3}
                     nameBaseFrom={`videos`}
                 />

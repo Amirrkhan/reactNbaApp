@@ -3,41 +3,22 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import {BrowserRouter} from 'react-router-dom'
 
+import {firebase} from './firebase'
+
 import Routes from './routes'
 
-const App = () => {
+const App = (props) => {
+    
     return (
+        
         <BrowserRouter>
-            <Routes/>
+            <Routes {...props}/>
         </BrowserRouter>
     )
 }
 
-
-ReactDOM.render(<App />, document.getElementById('root'));
-
-// import React from 'react'
-// import ReactDOM from 'react-dom'
-
-// import MyTransition from './functions/transition'
-
-// import Elements from './functions/elements'
+firebase.auth().onAuthStateChanged((user) =>{
+    ReactDOM.render(<App user={user}/>, document.getElementById('root'));
+})
 
 
-
-// const App = (props) => {
-
-
-//     return(
-//         <div>
-//             <MyTransition
-                
-//             >
-//                 <Elements/>
-                
-//             </MyTransition>
-//         </div>
-//     )
-// }
-
-// ReactDOM.render(<App />, document.getElementById('root'))

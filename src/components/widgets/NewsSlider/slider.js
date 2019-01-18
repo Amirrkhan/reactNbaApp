@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
+import {firebase, firebaseArticles, firebaseLooper} from '../../../firebase'
 import './slider.sass'
 
-import {URL} from '../../../config'
 import SliderTemplate from './sliderTemplate/sliderTemplate'
-import axios from 'axios'
+
 
 class NewsSlider extends Component {
 
@@ -12,13 +12,43 @@ class NewsSlider extends Component {
         news: []
     }
 
-    componentWillMount() {
-        axios.get(`${URL}${this.props.nameBaseFrom}?_start=${this.props.start}&_end=${this.props.amount}`)
-        .then( response => {
-            this.setState({
-                news: response.data
+    componentDidMount() {
+
+        firebaseArticles.limitToLast(this.props.amount).once('value')
+        .then((snapshot)=> {
+            const news = firebaseLooper(snapshot)
+
+            const asycnFunction = (item, i, cb) => {
+                if(item.image.length > 7){
+                    firebase.storage().ref('images')
+                    .child(item.image)
+                    .getDownloadURL()
+                    .then(url => {
+                        news[i].image = url
+                        cb()
+                        }
+                    )
+                }else{
+                    news[i].image = `/image/articles/${item.image}`
+                    cb()
+                }
+                
+            }   
+            
+
+            let requests = news.map((item, i) =>{
+                return new Promise((resolve) => {
+                    asycnFunction(item, i, resolve)
+                })
+            })
+
+            Promise.all(requests).then(() => {
+                this.setState({
+                    news
+                })
             })
         })
+
     }
 
     render() {

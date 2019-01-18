@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
-import axios from 'axios'
+
 
 import Button from '../../button/button'
-import {URL } from '../../../config'
 import VideoListTemplate from './videoListTemplate/videoListTemplate'
+import {firebaseTeams, firebaseVideos, firebaseLooper} from '../../../firebase'
 
 import './videoList.sass'
 
@@ -15,30 +15,33 @@ class VideoList extends Component {
         videos: []
     }
 
-    getData = (url, baseFromName, start, end) => {
+    getData = (database, start, amount) => {
 
         if (this.state.teams.length < 1){
-            axios.get(`${url}teams`).then(response => {
-
+            firebaseTeams.once('value')
+            .then((snapshot)=>{
+                const teams = firebaseLooper(snapshot)
                 this.setState({
-                    teams: response.data
+                    teams
                 })
             })
+            
         }
 
-
-        axios.get(`${url}${baseFromName}?_start=${start}&_end=${end}`).then(response => {
+        database.orderByChild('id').startAt(start).limitToFirst(amount).once('value')
+        .then((snapshot) => {
+            const videos = firebaseLooper(snapshot)
             this.setState({
-                videos: [...this.state.videos,...response.data]
+                videos: [...this.state.videos, ...videos]
             })
         })
     }
 
     loadmore = () => {
-        let end = this.state.end + this.props.amount
+        let end = this.state.end + (this.props.amount-1)
         let start = this.state.end
 
-        this.getData(URL, this.props.nameBaseFrom, start, end)
+        this.getData(firebaseVideos, start, end)
 
         this.setState({
             end: this.state.end + this.props.amount
@@ -46,7 +49,7 @@ class VideoList extends Component {
     }
 
     componentWillMount() {
-        this.getData(URL, this.props.nameBaseFrom , this.props.start, this.state.end)
+        this.getData(firebaseVideos, this.props.start, this.props.amount )
     }
 
     render(){

@@ -10,7 +10,7 @@ const CardInfo = (props) =>{
         template = props.teams.map((item) => {
             let returnValue = []
             
-            if(props.team === item.id)
+            if(props.team.toString() === item.id.toString())
             {
                 returnValue = (
                     <div key={item.id}>
